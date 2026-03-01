@@ -102,4 +102,77 @@ router.get('/stats', authenticateToken, isAdmin, async (req, res) => {
   }
 });
 
+// Get all pending submissions for admin review
+router.get('/submissions', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const result = await db.query(`
+      SELECT 
+        e.id, 
+        e.word, 
+        e.part_of_speech, 
+        e.pronunciation, 
+        e.definition, 
+        e.example, 
+        e.related_words, 
+        e.categories, 
+        e.created_by,
+        u.username as created_by_username,
+        e.created_at, 
+        e.updated_at,
+        e.status
+      FROM entries e
+      LEFT JOIN users u ON e.created_by = u.id
+      WHERE e.status = 'pending'
+      ORDER BY e.created_at DESC
+    `);
+    res.json(result.rows);
+  } catch (err) {
+    console.error('Error fetching submissions:', err);
+    res.status(500).json({ error: 'Error fetching submissions' });
+  }
+});
+
+// Approve a submission
+router.post('/submissions/:id/approve', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const result = await db.query(
+      "UPDATE entries SET status = 'approved', updated_at = NOW() WHERE id = $1 RETURNING *",
+      [req.params.id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Submission not found' });
+    }
+    
+    res.json({
+      message: 'Submission approved',
+      entry: result.rows[0]
+    });
+  } catch (err) {
+    console.error('Error approving submission:', err);
+    res.status(500).json({ error: 'Error approving submission' });
+  }
+});
+
+// Reject a submission
+router.post('/submissions/:id/reject', authenticateToken, isAdmin, async (req, res) => {
+  try {
+    const result = await db.query(
+      'DELETE FROM entries WHERE id = $1 RETURNING id',
+      [req.params.id]
+    );
+    
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Submission not found' });
+    }
+    
+    res.json({
+      message: 'Submission rejected and deleted'
+    });
+  } catch (err) {
+    console.error('Error rejecting submission:', err);
+    res.status(500).json({ error: 'Error rejecting submission' });
+  }
+});
+
 module.exports = router;

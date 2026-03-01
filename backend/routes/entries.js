@@ -16,6 +16,17 @@ router.get('/', async (req, res) => {
   }
 });
 
+// Get user's pending submissions
+router.get('/pending/mine', authenticateToken, async (req, res) => {
+  try {
+    const entries = await Entry.getPendingByUser(req.user.id);
+    res.json(entries);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching pending submissions' });
+  }
+});
+
 // Get single entry by word name
 router.get('/word/:word', async (req, res) => {
   try {
@@ -76,7 +87,7 @@ router.post(
   }
 );
 
-// Update entry (contributors only)
+// Update entry (contributors only - can edit their own pending entries)
 router.put(
   '/:id',
   authenticateToken,
@@ -95,12 +106,29 @@ router.put(
     }
 
     try {
-      const { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories } = req.body;
-      const entry = await Entry.update(req.params.id, word, partOfSpeech || null, pronunciation || null, definition, example || null, relatedWords || null, categories || null);
-      if (!entry) {
+      // Check if entry exists and belongs to user or user is admin
+      const existingEntry = await db.query('SELECT created_by, status FROM entries WHERE id = $1', [req.params.id]);
+      if (existingEntry.rows.length === 0) {
         return res.status(404).json({ error: 'Entry not found' });
       }
-      res.json(entry);
+      
+      const entry = existingEntry.rows[0];
+      
+      // Only allow editing pending entries by creator, or any entry by admin
+      if (entry.created_by !== req.user.id && !req.user.is_admin) {
+        return res.status(403).json({ error: 'You can only edit your own pending submissions' });
+      }
+      
+      if (entry.status === 'approved' && !req.user.is_admin) {
+        return res.status(403).json({ error: 'Cannot edit approved entries' });
+      }
+
+      const { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories } = req.body;
+      const updatedEntry = await Entry.update(req.params.id, word, partOfSpeech || null, pronunciation || null, definition, example || null, relatedWords || null, categories || null);
+      if (!updatedEntry) {
+        return res.status(404).json({ error: 'Entry not found' });
+      }
+      res.json(updatedEntry);
     } catch (err) {
       console.error(err);
       res.status(500).json({ error: 'Error updating entry' });

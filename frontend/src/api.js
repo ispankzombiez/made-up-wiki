@@ -43,6 +43,8 @@ export const entriesAPI = {
     api.put(`/entries/${id}`, { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories }),
   delete: (id) =>
     api.delete(`/entries/${id}`),
+  getPendingSubmissions: () =>
+    api.get('/entries/pending/mine'),
 };
 
 export const inviteAPI = {
@@ -59,6 +61,12 @@ export const inviteAPI = {
 export const adminAPI = {
   getStats: () =>
     api.get('/admin/stats'),
+  getPendingSubmissions: () =>
+    api.get('/admin/submissions'),
+  approveSubmission: (id) =>
+    api.post(`/admin/submissions/${id}/approve`),
+  rejectSubmission: (id) =>
+    api.post(`/admin/submissions/${id}/reject`),
 };
 
 export default api;

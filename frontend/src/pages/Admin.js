@@ -10,12 +10,15 @@ function Admin({ user }) {
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState(null);
+  const [submissions, setSubmissions] = useState([]);
 
   useEffect(() => {
     if (activeTab === 'dashboard') {
       handleLoadStats();
     } else if (activeTab === 'invites') {
       handleLoadInviteCodes();
+    } else if (activeTab === 'submissions') {
+      handleLoadSubmissions();
     }
   }, [activeTab]);
 
@@ -95,6 +98,52 @@ function Admin({ user }) {
     }
   };
 
+  const handleLoadSubmissions = async () => {
+    setError('');
+    setLoading(true);
+
+    try {
+      const res = await adminAPI.getPendingSubmissions();
+      setSubmissions(res.data);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to load submissions');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleApproveSubmission = async (id) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      await adminAPI.approveSubmission(id);
+      setSubmissions(submissions.filter(s => s.id !== id));
+      setMessage('Submission approved and published!');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to approve submission');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleRejectSubmission = async (id) => {
+    setError('');
+    setLoading(true);
+
+    try {
+      await adminAPI.rejectSubmission(id);
+      setSubmissions(submissions.filter(s => s.id !== id));
+      setMessage('Submission rejected and deleted');
+      setTimeout(() => setMessage(''), 3000);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to reject submission');
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="container">
       <div className="admin-panel">
@@ -109,6 +158,12 @@ function Admin({ user }) {
           </button>
           {user?.is_admin && (
             <>
+              <button
+                className={`tab-button ${activeTab === 'submissions' ? 'active' : ''}`}
+                onClick={() => setActiveTab('submissions')}
+              >
+                Submissions
+              </button>
               <button
                 className={`tab-button ${activeTab === 'invites' ? 'active' : ''}`}
                 onClick={() => { setActiveTab('invites'); handleLoadInviteCodes(); }}
@@ -313,6 +368,55 @@ function Admin({ user }) {
               </table>
             ) : (
               <p>No users yet</p>
+            )}
+          </div>
+        )}
+
+        {activeTab === 'submissions' && (
+          <div className="tab-content">
+            <h2>Pending Submissions</h2>
+            {loading ? (
+              <p className="loading">Loading submissions...</p>
+            ) : submissions.length > 0 ? (
+              <div className="submissions-list">
+                {submissions.map(sub => (
+                  <div key={sub.id} className="submission-card">
+                    <div className="submission-header">
+                      <h3>{sub.word}</h3>
+                      <div className="submission-meta">
+                        <span className="by">{sub.created_by_username}</span>
+                        <span className="date">{new Date(sub.created_at).toLocaleDateString()}</span>
+                      </div>
+                    </div>
+                    <div className="submission-body">
+                      {sub.part_of_speech && <p><strong>Part of Speech:</strong> {sub.part_of_speech}</p>}
+                      {sub.pronunciation && <p><strong>Pronunciation:</strong> {sub.pronunciation}</p>}
+                      <p><strong>Definition:</strong> {sub.definition}</p>
+                      {sub.example && <p><strong>Example:</strong> <em>{sub.example}</em></p>}
+                      {sub.related_words && <p><strong>Related Words:</strong> {sub.related_words}</p>}
+                      {sub.categories && <p><strong>Categories:</strong> {sub.categories}</p>}
+                    </div>
+                    <div className="submission-actions">
+                      <button 
+                        className="btn btn-approve" 
+                        onClick={() => handleApproveSubmission(sub.id)}
+                        disabled={loading}
+                      >
+                        ✓ Approve
+                      </button>
+                      <button 
+                        className="btn btn-reject" 
+                        onClick={() => handleRejectSubmission(sub.id)}
+                        disabled={loading}
+                      >
+                        ✗ Reject
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <p>No pending submissions</p>
             )}
           </div>
         )}

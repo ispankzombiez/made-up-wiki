@@ -550,5 +550,124 @@
     padding: 0.75rem;
     font-size: 0.9rem;
   }
+
+  .submission-card {
+    padding: 1rem;
+  }
+
+  .submission-header {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .submission-actions {
+    flex-direction: column;
+  }
+
+  .btn-approve,
+  .btn-reject {
+    width: 100%;
+  }
+}
+
+/* Submission Queue Styles */
+.submissions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.submission-card {
+  background-color: #1a1a1a;
+  border: 1px solid #3a3a3a;
+  border-radius: 8px;
+  padding: 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.submission-card:hover {
+  border-color: #64b5f6;
+}
+
+.submission-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #3a3a3a;
+}
+
+.submission-header h3 {
+  color: #ffffff;
+  margin: 0;
+  font-size: 1.3rem;
+}
+
+.submission-meta {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.85rem;
+  color: #b0b0b0;
+}
+
+.submission-meta .by {
+  color: #64b5f6;
+  font-weight: 500;
+}
+
+.submission-body {
+  margin-bottom: 1.5rem;
+  color: #e0e0e0;
+}
+
+.submission-body p {
+  margin: 0.75rem 0;
+  line-height: 1.5;
+}
+
+.submission-body strong {
+  color: #ffffff;
+}
+
+.submission-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+
+.btn-approve,
+.btn-reject {
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-approve {
+  background-color: #4caf50;
+  color: white;
+}
+
+.btn-approve:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.btn-reject {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-reject:hover:not(:disabled) {
+  background-color: #da190b;
+}
+
+.btn-approve:disabled,
+.btn-reject:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
