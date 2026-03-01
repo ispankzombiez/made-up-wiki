@@ -11,7 +11,7 @@ class Entry {
   }
 
   static async findAll(searchTerm = '') {
-    let query = 'SELECT id, word, definition, created_at, updated_at FROM entries';
+    let query = 'SELECT id, word, definition, created_by, created_at, updated_at FROM entries';
     const params = [];
 
     if (searchTerm) {
