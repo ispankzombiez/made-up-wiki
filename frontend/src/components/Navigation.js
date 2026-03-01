@@ -29,8 +29,8 @@ function Navigation({ user, onLogout }) {
         <div className="navbar-links">
           {user ? (
             <>
-              {user.is_contributor && (
-                <Link to="/admin" className="nav-link">Admin</Link>
+              {user.is_admin && (
+                <Link to="/admin" className="nav-link">Admin Dashboard</Link>
               )}
               <div className="settings-menu" ref={menuRef}>
                 <button

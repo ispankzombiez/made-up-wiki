@@ -83,7 +83,7 @@ function App() {
           <Route path="/word/:wordName" element={<WordDetail user={user} />} />
           <Route path="/login" element={user ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
           <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup onSignup={handleLogin} />} />
-          <Route path="/admin" element={user && user.is_contributor ? <Admin user={user} /> : <Navigate to="/" />} />
+          <Route path="/admin" element={user && user.is_admin ? <Admin user={user} /> : <Navigate to="/" />} />
           <Route path="/profile" element={user ? <Profile user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
         </Routes>
       </Router>

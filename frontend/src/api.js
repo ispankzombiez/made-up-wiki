@@ -56,4 +56,9 @@ export const inviteAPI = {
     api.put(`/invite/users/${userId}/contributor`, { is_contributor: isContributor }),
 };
 
+export const adminAPI = {
+  getStats: () =>
+    api.get('/admin/stats'),
+};
+
 export default api;
