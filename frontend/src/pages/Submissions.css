@@ -337,11 +337,14 @@
   padding: 1.5rem;
   box-sizing: border-box;
   flex: 1;
-  overflow: hidden;
+  overflow-y: auto;
+  width: 100%;
 }
 
 .form-group {
   margin-bottom: 1.5rem;
+  margin-left: 0;
+  margin-right: 0;
 }
 
 .form-group:last-child {
@@ -353,6 +356,8 @@
   font-weight: 600;
   margin-bottom: 0.5rem;
   color: #000;
+  white-space: normal;
+  overflow: visible;
 }
 
 .form-group input,
@@ -380,6 +385,8 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .edit-modal-footer {
