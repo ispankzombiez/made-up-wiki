@@ -274,7 +274,7 @@
 .edit-modal-header h2 {
   margin: 0;
   font-size: 1.5rem;
-  color: var(--text-primary, #333);
+  color: inherit;
 }
 
 .close-btn {
@@ -320,7 +320,7 @@
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
-  color: var(--text-primary, #333);
+  color: inherit;
 }
 
 .form-group input,
@@ -332,7 +332,7 @@
   font-size: 1rem;
   font-family: inherit;
   background-color: var(--background-primary, #fff);
-  color: var(--text-primary, #333);
+  color: inherit;
 }
 
 .form-group input:focus,
