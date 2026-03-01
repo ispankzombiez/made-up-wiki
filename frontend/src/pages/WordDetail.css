@@ -1,0 +1,351 @@
+/* Word Detail Page Styles */
+.word-detail-page {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem;
+  color: var(--link-color, #0066cc);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.back-link:hover {
+  color: var(--link-hover-color, #0052a3);
+  text-decoration: underline;
+}
+
+.entry-detail {
+  background: var(--bg-secondary, #ffffff);
+  border-radius: 8px;
+  padding: 2rem;
+  box-shadow: 0 2px 10px var(--card-shadow, rgba(0, 0, 0, 0.1));
+}
+
+.entry-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+  gap: 1rem;
+}
+
+.entry-title {
+  flex: 1;
+}
+
+.entry-title h1 {
+  margin: 0;
+  color: var(--text-primary, #333);
+  font-size: 2.5rem;
+  word-break: break-word;
+}
+
+.part-of-speech {
+  display: inline-block;
+  background: var(--code-bg, #f0f0f0);
+  color: var(--text-secondary, #666);
+  padding: 0.25rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin-left: 0.5rem;
+  font-weight: 500;
+}
+
+.entry-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.btn-edit, .btn-delete {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.btn-edit {
+  background-color: #2196F3;
+  color: white;
+}
+
+.btn-edit:hover {
+  background-color: #1976D2;
+}
+
+.btn-delete {
+  background-color: #f44336;
+  color: white;
+}
+
+.btn-delete:hover {
+  background-color: #d32f2f;
+}
+
+.pronunciation {
+  color: var(--text-secondary, #666);
+  font-size: 1.1rem;
+  font-style: italic;
+  margin: 0.5rem 0 1.5rem 0;
+}
+
+.definition {
+  color: var(--text-primary, #333);
+  font-size: 1.1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.example {
+  background: var(--code-bg, #f5f5f5);
+  color: var(--text-primary, #333);
+  padding: 1rem;
+  border-left: 4px solid var(--accent-color, #0066cc);
+  border-radius: 4px;
+  margin: 1.5rem 0;
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.example em {
+  color: var(--text-secondary, #666);
+  font-weight: 600;
+}
+
+.related-words {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  background: var(--code-bg, #f5f5f5);
+  border-radius: 4px;
+}
+
+.related-words strong {
+  color: var(--text-primary, #333);
+}
+
+.related-word-link {
+  color: var(--link-color, #0066cc);
+  text-decoration: none;
+  font-weight: 500;
+  margin: 0 0.25rem;
+  transition: all 0.2s;
+}
+
+.related-word-link:hover {
+  color: var(--link-hover-color, #0052a3);
+  text-decoration: underline;
+}
+
+.entry-footer {
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color, #eee);
+}
+
+.entry-meta {
+  color: var(--text-secondary, #666);
+  font-size: 0.9rem;
+}
+
+.entry-meta strong {
+  color: var(--text-primary, #333);
+}
+
+/* Edit Form Styles */
+.edit-form {
+  background: var(--bg-secondary, #ffffff);
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px var(--card-shadow, rgba(0, 0, 0, 0.1));
+}
+
+.edit-form h2 {
+  color: var(--text-primary, #333);
+  margin-bottom: 1.5rem;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  color: var(--text-primary, #333) !important;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--input-border, #ddd);
+  border-radius: 4px;
+  font-size: 0.95rem;
+  box-sizing: border-box;
+  background-color: var(--input-bg, #ffffff);
+  color: var(--text-primary, #333);
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #2196F3;
+  box-shadow: 0 0 5px rgba(33, 150, 243, 0.2);
+}
+
+.form-group input:disabled,
+.form-group textarea:disabled {
+  background-color: var(--input-disabled-bg, #f0f0f0);
+  cursor: not-allowed;
+}
+
+.edit-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+.btn-save, .btn-cancel {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.btn-save {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.btn-save:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.btn-save:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-cancel {
+  background-color: #f0f0f0;
+  color: #333;
+  border: 1px solid #ddd;
+}
+
+.btn-cancel:hover:not(:disabled) {
+  background-color: #e0e0e0;
+}
+
+.btn-cancel:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.error-message {
+  background-color: var(--error-bg, #ffebee);
+  color: var(--error-text, #c62828);
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--error-text, #c62828);
+}
+
+.error {
+  background-color: var(--error-bg, #ffebee);
+  color: var(--error-text, #c62828);
+  padding: 0.75rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+  border-left: 4px solid var(--error-text, #c62828);
+  font-size: 0.95rem;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .word-detail-page {
+    margin: 1rem auto;
+  }
+
+  .entry-detail {
+    padding: 1.5rem;
+  }
+
+  .entry-header {
+    flex-direction: column;
+  }
+
+  .entry-title h1 {
+    font-size: 2rem;
+  }
+
+  .entry-actions {
+    width: 100%;
+  }
+
+  .btn-edit, .btn-delete {
+    flex: 1;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .edit-actions {
+    flex-direction: column;
+  }
+
+  .btn-save, .btn-cancel {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .word-detail-page {
+    margin: 0.5rem auto;
+    padding: 0.5rem;
+  }
+
+  .entry-detail {
+    padding: 1rem;
+    border-radius: 6px;
+  }
+
+  .entry-title h1 {
+    font-size: 1.5rem;
+  }
+
+  .definition {
+    font-size: 1rem;
+  }
+
+  .example {
+    padding: 0.75rem;
+    font-size: 0.9rem;
+  }
+
+  .entry-footer {
+    margin-top: 1rem;
+    padding-top: 1rem;
+  }
+}

@@ -3,6 +3,7 @@ const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const User = require('../models/User');
 const InviteCode = require('../models/InviteCode');
+const db = require('../db');
 const { authenticateToken } = require('../middleware/auth');
 
 // Sign up with invite code
@@ -95,6 +96,7 @@ router.post(
         user: {
           id: user.id,
           email: user.email,
+          username: user.username,
           is_contributor: user.is_contributor,
         },
       });
@@ -113,6 +115,33 @@ router.get('/me', authenticateToken, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error fetching user' });
+  }
+});
+
+// Update username
+router.put('/username', authenticateToken, [body('username').trim().isLength({ min: 3, max: 50 }).matches(/^[a-zA-Z0-9_-]+$/)], async (req, res) => {
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    return res.status(400).json({ error: 'Username must be 3-50 characters and contain only letters, numbers, hyphens, and underscores' });
+  }
+
+  try {
+    const { username } = req.body;
+
+    // Check if username is already taken
+    const existingUser = await db.query('SELECT id FROM users WHERE username = $1 AND id != $2', [username, req.user.id]);
+    if (existingUser.rows.length > 0) {
+      return res.status(400).json({ error: 'Username is already taken' });
+    }
+
+    const user = await User.setUsername(req.user.id, username);
+    res.json({
+      message: 'Username updated successfully',
+      user
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error updating username' });
   }
 });
 

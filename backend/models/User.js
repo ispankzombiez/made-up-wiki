@@ -18,12 +18,12 @@ class User {
   }
 
   static async findById(id) {
-    const result = await db.query('SELECT id, email, is_contributor, is_admin, created_at FROM users WHERE id = $1', [id]);
+    const result = await db.query('SELECT id, email, username, is_contributor, is_admin, created_at FROM users WHERE id = $1', [id]);
     return result.rows[0];
   }
 
   static async getAllUsers() {
-    const result = await db.query('SELECT id, email, is_contributor, is_admin, created_at FROM users ORDER BY created_at DESC');
+    const result = await db.query('SELECT id, email, username, is_contributor, is_admin, created_at FROM users ORDER BY created_at DESC');
     return result.rows;
   }
 
@@ -37,8 +37,16 @@ class User {
 
   static async setAdmin(userId, status) {
     const result = await db.query(
-      'UPDATE users SET is_admin = $1 WHERE id = $2 RETURNING id, email, is_contributor, is_admin',
+      'UPDATE users SET is_admin = $1 WHERE id = $2 RETURNING id, email, username, is_contributor, is_admin',
       [status, userId]
+    );
+    return result.rows[0];
+  }
+
+  static async setUsername(userId, username) {
+    const result = await db.query(
+      'UPDATE users SET username = $1 WHERE id = $2 RETURNING id, email, username, is_contributor, is_admin',
+      [username, userId]
     );
     return result.rows[0];
   }
@@ -49,7 +57,7 @@ class User {
 
   static generateToken(user) {
     return jwt.sign(
-      { id: user.id, email: user.email, is_contributor: user.is_contributor, is_admin: user.is_admin },
+      { id: user.id, email: user.email, username: user.username, is_contributor: user.is_contributor, is_admin: user.is_admin },
       process.env.JWT_SECRET,
       { expiresIn: '7d' }
     );

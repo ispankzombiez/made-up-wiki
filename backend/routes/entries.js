@@ -16,7 +16,21 @@ router.get('/', async (req, res) => {
   }
 });
 
-// Get single entry
+// Get single entry by word name
+router.get('/word/:word', async (req, res) => {
+  try {
+    const entry = await Entry.findByWord(req.params.word);
+    if (!entry) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+    res.json(entry);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching entry' });
+  }
+});
+
+// Get single entry by ID
 router.get('/:id', async (req, res) => {
   try {
     const entry = await Entry.findById(req.params.id);

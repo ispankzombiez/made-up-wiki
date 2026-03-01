@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { entriesAPI } from '../api';
+import CreateEntryModal from '../components/CreateEntryModal';
 import './Home.css';
 
 function Home({ user }) {
@@ -7,6 +9,7 @@ function Home({ user }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [showModal, setShowModal] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [openDropdown, setOpenDropdown] = useState(null);
   const [editForm, setEditForm] = useState({
@@ -131,6 +134,11 @@ function Home({ user }) {
     setSearchTerm(word);
   };
 
+  const handleEntryCreated = (newEntry) => {
+    setEntries([newEntry, ...entries]);
+    setSearchTerm('');
+  };
+
   useEffect(() => {
     const timer = setTimeout(() => {
       if (searchTerm) {
@@ -146,15 +154,14 @@ function Home({ user }) {
     if (words.length === 0) return null;
     return (
       <div className="related-words">
-        <strong>Related words:</strong>
-        {words.map((word, idx) => (
-          <button
-            key={idx}
-            className="related-word-link"
-            onClick={() => handleRelatedWordClick(word)}
-          >
-            {word}
-          </button>
+        <strong>Related words:</strong>{' '}
+        {words.map((word, index) => (
+          <React.Fragment key={index}>
+            <Link to={`/word/${encodeURIComponent(word)}`} className="related-word-link">
+              {word}
+            </Link>
+            {index < words.length - 1 && ', '}
+          </React.Fragment>
         ))}
       </div>
     );
@@ -166,16 +173,23 @@ function Home({ user }) {
         <h1>Made-Up Wiki</h1>
         <p className="subtitle">Explore all the made-up words and their definitions</p>
 
-        <form onSubmit={handleSearch} className="search-form">
-          <input
-            type="text"
-            placeholder="Search words and definitions..."
-            value={searchTerm}
-            onChange={handleSearchChange}
-            className="search-input"
-          />
-          <button type="submit" className="search-button">Search</button>
-        </form>
+        <div className="header-controls">
+          <form onSubmit={handleSearch} className="search-form">
+            <input
+              type="text"
+              placeholder="Search words and definitions..."
+              value={searchTerm}
+              onChange={handleSearchChange}
+              className="search-input"
+            />
+            <button type="submit" className="search-button">Search</button>
+          </form>
+          {user && user.is_contributor && (
+            <button onClick={() => setShowModal(true)} className="new-button">
+              New
+            </button>
+          )}
+        </div>
 
         {error && <div className="error">{error}</div>}
 
@@ -326,7 +340,7 @@ function Home({ user }) {
 
                     <div className="entry-footer">
                       <small className="entry-meta">
-                        Created by: <strong>{user?.id === entry.created_by ? 'You' : 'Contributor'}</strong> • {new Date(entry.created_at).toLocaleDateString()}
+                        Created by: <strong>{user?.id === entry.created_by ? 'You' : entry.created_by_username || 'Unknown'}</strong> • {new Date(entry.created_at).toLocaleDateString()}
                         {entry.updated_at !== entry.created_at && ` • Updated: ${new Date(entry.updated_at).toLocaleDateString()}`}
                       </small>
                     </div>
@@ -338,6 +352,12 @@ function Home({ user }) {
             ))}
           </div>
         )}
+        
+        <CreateEntryModal 
+          isOpen={showModal}
+          onClose={() => setShowModal(false)}
+          onEntryCreated={handleEntryCreated}
+        />
       </div>
     </div>
   );

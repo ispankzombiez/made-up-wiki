@@ -26,6 +26,8 @@ export const authAPI = {
     api.post('/auth/login', { email, password }),
   getCurrentUser: () =>
     api.get('/auth/me'),
+  updateUsername: (username) =>
+    api.put('/auth/username', { username }),
 };
 
 export const entriesAPI = {
@@ -33,6 +35,8 @@ export const entriesAPI = {
     api.get('/entries', { params: { search: searchTerm } }),
   getById: (id) =>
     api.get(`/entries/${id}`),
+  getByWord: (word) =>
+    api.get(`/entries/word/${word}`),
   create: (word, partOfSpeech, pronunciation, definition, example, relatedWords) =>
     api.post('/entries', { word, partOfSpeech, pronunciation, definition, example, relatedWords }),
   update: (id, word, partOfSpeech, pronunciation, definition, example, relatedWords) =>
