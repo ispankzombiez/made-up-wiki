@@ -23,7 +23,7 @@
 .setup-form .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: var(--text-primary);
+  color: #ffffff !important;
   font-weight: 600;
   font-size: 0.95rem;
 }
