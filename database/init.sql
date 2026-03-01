@@ -12,7 +12,11 @@ CREATE TABLE IF NOT EXISTS users (
 CREATE TABLE IF NOT EXISTS entries (
   id SERIAL PRIMARY KEY,
   word VARCHAR(255) NOT NULL,
+  part_of_speech VARCHAR(50),
+  pronunciation VARCHAR(255),
   definition TEXT NOT NULL,
+  example TEXT,
+  related_words TEXT,
   created_by INTEGER REFERENCES users(id) ON DELETE SET NULL,
   created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

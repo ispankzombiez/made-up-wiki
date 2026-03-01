@@ -5,7 +5,11 @@ import './Admin.css';
 function Admin({ user }) {
   const [activeTab, setActiveTab] = useState('entries');
   const [word, setWord] = useState('');
+  const [partOfSpeech, setPartOfSpeech] = useState('');
+  const [pronunciation, setPronunciation] = useState('');
   const [definition, setDefinition] = useState('');
+  const [example, setExample] = useState('');
+  const [relatedWords, setRelatedWords] = useState('');
   const [inviteCodes, setInviteCodes] = useState([]);
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState('');
@@ -19,10 +23,14 @@ function Admin({ user }) {
     setLoading(true);
 
     try {
-      await entriesAPI.create(word, definition);
+      await entriesAPI.create(word, partOfSpeech, pronunciation, definition, example, relatedWords);
       setMessage('Entry created successfully!');
       setWord('');
+      setPartOfSpeech('');
+      setPronunciation('');
       setDefinition('');
+      setExample('');
+      setRelatedWords('');
       setTimeout(() => setMessage(''), 3000);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to create entry');
@@ -129,18 +137,44 @@ function Admin({ user }) {
           <div className="tab-content">
             <h2>Create New Entry</h2>
             <form onSubmit={handleCreateEntry} className="entry-form">
+              <div className="form-row">
+                <div className="form-group">
+                  <label htmlFor="word">Word</label>
+                  <input
+                    type="text"
+                    id="word"
+                    value={word}
+                    onChange={(e) => setWord(e.target.value)}
+                    placeholder="Enter the word"
+                    required
+                    disabled={loading}
+                  />
+                </div>
+                <div className="form-group">
+                  <label htmlFor="pos">Part of Speech</label>
+                  <input
+                    type="text"
+                    id="pos"
+                    value={partOfSpeech}
+                    onChange={(e) => setPartOfSpeech(e.target.value)}
+                    placeholder="noun, verb, adj, etc."
+                    disabled={loading}
+                  />
+                </div>
+              </div>
+
               <div className="form-group">
-                <label htmlFor="word">Word</label>
+                <label htmlFor="pronunciation">Pronunciation</label>
                 <input
                   type="text"
-                  id="word"
-                  value={word}
-                  onChange={(e) => setWord(e.target.value)}
-                  placeholder="Enter the word"
-                  required
+                  id="pronunciation"
+                  value={pronunciation}
+                  onChange={(e) => setPronunciation(e.target.value)}
+                  placeholder="e.g., /ɪɡˈzæmpəl/"
                   disabled={loading}
                 />
               </div>
+
               <div className="form-group">
                 <label htmlFor="definition">Definition</label>
                 <textarea
@@ -148,11 +182,36 @@ function Admin({ user }) {
                   value={definition}
                   onChange={(e) => setDefinition(e.target.value)}
                   placeholder="Enter the definition"
-                  rows="6"
+                  rows="4"
                   required
                   disabled={loading}
                 />
               </div>
+
+              <div className="form-group">
+                <label htmlFor="example">Example</label>
+                <textarea
+                  id="example"
+                  value={example}
+                  onChange={(e) => setExample(e.target.value)}
+                  placeholder="e.g., 'This is an example sentence.'"
+                  rows="2"
+                  disabled={loading}
+                />
+              </div>
+
+              <div className="form-group">
+                <label htmlFor="related">Related Words</label>
+                <input
+                  type="text"
+                  id="related"
+                  value={relatedWords}
+                  onChange={(e) => setRelatedWords(e.target.value)}
+                  placeholder="word1, word2, word3"
+                  disabled={loading}
+                />
+              </div>
+
               <button type="submit" disabled={loading} className="btn">
                 {loading ? 'Creating...' : 'Create Entry'}
               </button>

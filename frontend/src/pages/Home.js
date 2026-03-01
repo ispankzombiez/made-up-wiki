@@ -8,8 +8,15 @@ function Home({ user }) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
-  const [editWord, setEditWord] = useState('');
-  const [editDefinition, setEditDefinition] = useState('');
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const [editForm, setEditForm] = useState({
+    word: '',
+    partOfSpeech: '',
+    pronunciation: '',
+    definition: '',
+    example: '',
+    relatedWords: ''
+  });
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState('');
 
@@ -44,32 +51,59 @@ function Home({ user }) {
 
   const handleEdit = (entry) => {
     setEditingId(entry.id);
-    setEditWord(entry.word);
-    setEditDefinition(entry.definition);
+    setEditForm({
+      word: entry.word || '',
+      partOfSpeech: entry.part_of_speech || '',
+      pronunciation: entry.pronunciation || '',
+      definition: entry.definition || '',
+      example: entry.example || '',
+      relatedWords: entry.related_words || ''
+    });
     setEditError('');
+    setOpenDropdown(null);
   };
 
   const handleCancelEdit = () => {
     setEditingId(null);
-    setEditWord('');
-    setEditDefinition('');
+    setEditForm({
+      word: '',
+      partOfSpeech: '',
+      pronunciation: '',
+      definition: '',
+      example: '',
+      relatedWords: ''
+    });
     setEditError('');
   };
 
   const handleSaveEdit = async (entryId) => {
-    if (!editWord.trim() || !editDefinition.trim()) {
-      setEditError('Both word and definition are required');
+    if (!editForm.word.trim() || !editForm.definition.trim()) {
+      setEditError('Word and definition are required');
       return;
     }
 
     setEditLoading(true);
     setEditError('');
     try {
-      const res = await entriesAPI.update(entryId, editWord, editDefinition);
+      const res = await entriesAPI.update(
+        entryId,
+        editForm.word,
+        editForm.partOfSpeech,
+        editForm.pronunciation,
+        editForm.definition,
+        editForm.example,
+        editForm.relatedWords
+      );
       setEntries(entries.map(e => e.id === entryId ? res.data : e));
       setEditingId(null);
-      setEditWord('');
-      setEditDefinition('');
+      setEditForm({
+        word: '',
+        partOfSpeech: '',
+        pronunciation: '',
+        definition: '',
+        example: '',
+        relatedWords: ''
+      });
     } catch (err) {
       console.error('Error updating entry:', err);
       setEditError(err.response?.data?.error || 'Failed to update entry');
@@ -86,10 +120,15 @@ function Home({ user }) {
     try {
       await entriesAPI.delete(entryId);
       setEntries(entries.filter(e => e.id !== entryId));
+      setOpenDropdown(null);
     } catch (err) {
       console.error('Error deleting entry:', err);
       setError(err.response?.data?.error || 'Failed to delete entry');
     }
+  };
+
+  const handleRelatedWordClick = (word) => {
+    setSearchTerm(word);
   };
 
   useEffect(() => {
@@ -100,6 +139,26 @@ function Home({ user }) {
     }, 300);
     return () => clearTimeout(timer);
   }, [searchTerm]);
+
+  const renderRelatedWords = (relatedWords) => {
+    if (!relatedWords) return null;
+    const words = relatedWords.split(',').map(w => w.trim()).filter(w => w);
+    if (words.length === 0) return null;
+    return (
+      <div className="related-words">
+        <strong>Related words:</strong>
+        {words.map((word, idx) => (
+          <button
+            key={idx}
+            className="related-word-link"
+            onClick={() => handleRelatedWordClick(word)}
+          >
+            {word}
+          </button>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div className="container">
@@ -132,28 +191,80 @@ function Home({ user }) {
                   <div className="edit-form">
                     <h3>Edit Entry</h3>
                     {editError && <div className="error">{editError}</div>}
+                    
+                    <div className="form-row">
+                      <div className="form-group">
+                        <label htmlFor="edit-word">Word</label>
+                        <input
+                          id="edit-word"
+                          type="text"
+                          value={editForm.word}
+                          onChange={(e) => setEditForm({ ...editForm, word: e.target.value })}
+                          placeholder="Enter word"
+                          disabled={editLoading}
+                        />
+                      </div>
+                      <div className="form-group">
+                        <label htmlFor="edit-pos">Part of Speech</label>
+                        <input
+                          id="edit-pos"
+                          type="text"
+                          value={editForm.partOfSpeech}
+                          onChange={(e) => setEditForm({ ...editForm, partOfSpeech: e.target.value })}
+                          placeholder="noun, adj, verb, etc."
+                          disabled={editLoading}
+                        />
+                      </div>
+                    </div>
+
                     <div className="form-group">
-                      <label htmlFor="edit-word">Word</label>
+                      <label htmlFor="edit-pronunciation">Pronunciation</label>
                       <input
-                        id="edit-word"
+                        id="edit-pronunciation"
                         type="text"
-                        value={editWord}
-                        onChange={(e) => setEditWord(e.target.value)}
-                        placeholder="Enter word"
+                        value={editForm.pronunciation}
+                        onChange={(e) => setEditForm({ ...editForm, pronunciation: e.target.value })}
+                        placeholder="e.g., /ɪɡˈzæmpəl/"
                         disabled={editLoading}
                       />
                     </div>
+
                     <div className="form-group">
                       <label htmlFor="edit-definition">Definition</label>
                       <textarea
                         id="edit-definition"
-                        value={editDefinition}
-                        onChange={(e) => setEditDefinition(e.target.value)}
+                        value={editForm.definition}
+                        onChange={(e) => setEditForm({ ...editForm, definition: e.target.value })}
                         placeholder="Enter definition"
-                        rows="4"
+                        rows="3"
                         disabled={editLoading}
                       />
                     </div>
+
+                    <div className="form-group">
+                      <label htmlFor="edit-example">Example</label>
+                      <textarea
+                        id="edit-example"
+                        value={editForm.example}
+                        onChange={(e) => setEditForm({ ...editForm, example: e.target.value })}
+                        placeholder="e.g., 'This is an example sentence.'"
+                        rows="2"
+                        disabled={editLoading}
+                      />
+                    </div>
+
+                    <div className="form-group">
+                      <label htmlFor="edit-related">Related Words</label>
+                      <input
+                        id="edit-related"
+                        type="text"
+                        value={editForm.relatedWords}
+                        onChange={(e) => setEditForm({ ...editForm, relatedWords: e.target.value })}
+                        placeholder="word1, word2, word3"
+                        disabled={editLoading}
+                      />
+                    </div>
+
                     <div className="edit-actions">
                       <button
                         onClick={() => handleSaveEdit(entry.id)}
@@ -173,28 +284,54 @@ function Home({ user }) {
                   </div>
                 ) : (
                   <>
-                    <h2>{entry.word}</h2>
-                    <p>{entry.definition}</p>
-                    <small className="entry-meta">
-                      Created: {new Date(entry.created_at).toLocaleDateString()}
-                      {entry.updated_at !== entry.created_at && ` • Updated: ${new Date(entry.updated_at).toLocaleDateString()}`}
-                    </small>
-                    {user && user.is_contributor && user.id === entry.created_by && (
-                      <div className="entry-actions">
-                        <button
-                          onClick={() => handleEdit(entry)}
-                          className="btn-edit"
-                        >
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(entry.id)}
-                          className="btn-delete"
-                        >
-                          Delete
-                        </button>
+                    <div className="entry-header">
+                      <div className="entry-title">
+                        <h2>{entry.word}</h2>
+                        {entry.part_of_speech && <span className="part-of-speech">{entry.part_of_speech}</span>}
                       </div>
+                      
+                      {user && user.is_contributor && user.id === entry.created_by && (
+                        <div className="dropdown-container">
+                          <button
+                            className="pencil-icon"
+                            onClick={() => setOpenDropdown(openDropdown === entry.id ? null : entry.id)}
+                          >
+                            ✏️
+                          </button>
+                          {openDropdown === entry.id && (
+                            <div className="dropdown-menu">
+                              <button onClick={() => handleEdit(entry)} className="dropdown-item edit">
+                                Edit
+                              </button>
+                              <button onClick={() => handleDelete(entry.id)} className="dropdown-item delete">
+                                Delete
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {entry.pronunciation && (
+                      <p className="pronunciation">{entry.pronunciation}</p>
                     )}
+
+                    <p className="definition">{entry.definition}</p>
+
+                    {entry.example && (
+                      <p className="example">
+                        <em>Example:</em> "{entry.example}"
+                      </p>
+                    )}
+
+                    <div className="entry-footer">
+                      <small className="entry-meta">
+                        Created by: <strong>{user?.id === entry.created_by ? 'You' : 'Contributor'}</strong> • {new Date(entry.created_at).toLocaleDateString()}
+                        {entry.updated_at !== entry.created_at && ` • Updated: ${new Date(entry.updated_at).toLocaleDateString()}`}
+                      </small>
+                    </div>
+
+                    {renderRelatedWords(entry.related_words)}
                   </>
                 )}
               </div>

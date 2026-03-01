@@ -33,10 +33,10 @@ export const entriesAPI = {
     api.get('/entries', { params: { search: searchTerm } }),
   getById: (id) =>
     api.get(`/entries/${id}`),
-  create: (word, definition) =>
-    api.post('/entries', { word, definition }),
-  update: (id, word, definition) =>
-    api.put(`/entries/${id}`, { word, definition }),
+  create: (word, partOfSpeech, pronunciation, definition, example, relatedWords) =>
+    api.post('/entries', { word, partOfSpeech, pronunciation, definition, example, relatedWords }),
+  update: (id, word, partOfSpeech, pronunciation, definition, example, relatedWords) =>
+    api.put(`/entries/${id}`, { word, partOfSpeech, pronunciation, definition, example, relatedWords }),
   delete: (id) =>
     api.delete(`/entries/${id}`),
 };
