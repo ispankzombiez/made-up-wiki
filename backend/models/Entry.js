@@ -60,6 +60,7 @@ class Entry {
   }
 
   static async findByWord(word) {
+    console.log('Entry.findByWord called with:', word);
     const result = await db.query(
       `SELECT 
         e.id, 
@@ -78,6 +79,7 @@ class Entry {
       WHERE LOWER(e.word) = LOWER($1)`,
       [word]
     );
+    console.log('Query result:', result.rows);
     return result.rows[0];
   }
 

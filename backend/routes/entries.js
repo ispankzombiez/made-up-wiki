@@ -19,13 +19,16 @@ router.get('/', async (req, res) => {
 // Get single entry by word name
 router.get('/word/:word', async (req, res) => {
   try {
-    const entry = await Entry.findByWord(req.params.word);
+    const word = req.params.word;
+    console.log('Looking for word:', word);
+    const entry = await Entry.findByWord(word);
+    console.log('Found entry:', entry);
     if (!entry) {
       return res.status(404).json({ error: 'Entry not found' });
     }
     res.json(entry);
   } catch (err) {
-    console.error(err);
+    console.error('Error fetching word:', err);
     res.status(500).json({ error: 'Error fetching entry' });
   }
 });
