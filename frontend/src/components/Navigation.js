@@ -54,6 +54,13 @@ function Navigation({ user, onLogout }) {
                     >
                       Profile Settings
                     </Link>
+                    <Link
+                      to="/submissions"
+                      className="menu-item"
+                      onClick={() => setShowMenu(false)}
+                    >
+                      My Submissions
+                    </Link>
                     <button
                       onClick={onLogout}
                       className="menu-item logout-item"

@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Admin from './pages/Admin';
 import Profile from './pages/Profile';
+import Submissions from './pages/Submissions';
 import './App.css';
 
 function App() {
@@ -85,6 +86,7 @@ function App() {
           <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup onSignup={handleLogin} />} />
           <Route path="/admin" element={user && user.is_admin ? <Admin user={user} /> : <Navigate to="/" />} />
           <Route path="/profile" element={user ? <Profile user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
+          <Route path="/submissions" element={user ? <Submissions user={user} /> : <Navigate to="/login" />} />
         </Routes>
       </Router>
     </ThemeProvider>
