@@ -296,7 +296,9 @@ function Home({ user }) {
                   <>
                     <div className="entry-header">
                       <div className="entry-title">
-                        <h2>{entry.word}</h2>
+                        <Link to={`/word/${encodeURIComponent(entry.word)}`} className="entry-title-link">
+                          <h2>{entry.word}</h2>
+                        </Link>
                         {entry.part_of_speech && <span className="part-of-speech">{entry.part_of_speech}</span>}
                       </div>
                       

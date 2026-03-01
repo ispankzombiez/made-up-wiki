@@ -113,11 +113,24 @@
   gap: 0.75rem;
 }
 
+.entry-title-link {
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  align-items: baseline;
+}
+
+.entry-title-link:hover h2 {
+  color: var(--link-color);
+  text-decoration: underline;
+}
+
 .entry-card h2 {
   margin: 0;
   color: var(--text-primary);
   font-size: 1.8rem;
   word-break: break-word;
+  transition: all 0.2s;
 }
 
 .part-of-speech {
