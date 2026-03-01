@@ -1,0 +1,221 @@
+.admin-panel {
+  max-width: 800px;
+  margin: 2rem auto;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+}
+
+.admin-panel h1 {
+  background-color: #333;
+  color: white;
+  padding: 1.5rem;
+  margin: 0;
+  text-align: center;
+}
+
+.admin-tabs {
+  display: flex;
+  border-bottom: 2px solid #ddd;
+  background-color: #f5f5f5;
+}
+
+.tab-button {
+  flex: 1;
+  padding: 1rem;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-size: 1rem;
+  border-bottom: 3px solid transparent;
+  transition: all 0.2s;
+  color: #666;
+}
+
+.tab-button:hover {
+  background-color: #eee;
+}
+
+.tab-button.active {
+  color: #333;
+  border-bottom-color: #333;
+  background-color: white;
+}
+
+.tab-content {
+  padding: 2rem;
+}
+
+.tab-content h2 {
+  color: #333;
+  margin-top: 0;
+}
+
+.entry-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group label {
+  margin-bottom: 0.5rem;
+  color: #333;
+  font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+  padding: 0.75rem;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-family: inherit;
+}
+
+.form-group textarea {
+  resize: vertical;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #333;
+  box-shadow: 0 0 5px rgba(51, 51, 51, 0.1);
+}
+
+.success {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.error {
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  padding: 0.75rem 1.5rem;
+  background-color: #333;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+  align-self: flex-start;
+}
+
+.btn:hover:not(:disabled) {
+  background-color: #555;
+}
+
+.btn:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+
+.invites-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.invites-table thead {
+  background-color: #f5f5f5;
+}
+
+.invites-table th,
+.invites-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.invites-table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.invites-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.invites-table .code {
+  font-family: monospace;
+  background-color: #f5f5f5;
+  padding: 0.5rem 0.75rem;
+  border-radius: 3px;
+  font-weight: 600;
+}
+
+.users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.users-table thead {
+  background-color: #f5f5f5;
+}
+
+.users-table th,
+.users-table td {
+  padding: 0.75rem;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+.users-table th {
+  font-weight: 600;
+  color: #333;
+}
+
+.users-table tbody tr:hover {
+  background-color: #f9f9f9;
+}
+
+.toggle-btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.toggle-btn.grant {
+  background-color: #4caf50;
+  color: white;
+}
+
+.toggle-btn.grant:hover:not(:disabled) {
+  background-color: #45a049;
+}
+
+.toggle-btn.revoke {
+  background-color: #ff9800;
+  color: white;
+}
+
+.toggle-btn.revoke:hover:not(:disabled) {
+  background-color: #e68900;
+}
+
+.toggle-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
