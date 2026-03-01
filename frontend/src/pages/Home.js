@@ -17,10 +17,13 @@ function Home({ user }) {
     setError('');
     try {
       const res = await entriesAPI.getAll(searchTerm);
-      setEntries(res.data);
+      // Ensure we set an array
+      const data = Array.isArray(res.data) ? res.data : [];
+      setEntries(data);
     } catch (err) {
+      console.error('Error fetching entries:', err);
       setError('Failed to fetch entries');
-      console.error(err);
+      setEntries([]); // Fallback to empty array
     } finally {
       setLoading(false);
     }

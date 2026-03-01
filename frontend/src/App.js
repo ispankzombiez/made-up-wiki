@@ -39,7 +39,7 @@ function App() {
   }
 
   return (
-    <Router>
+    <Router basename="/made-up-wiki">
       <Navigation user={user} onLogout={handleLogout} />
       <Routes>
         <Route path="/" element={<Home user={user} />} />

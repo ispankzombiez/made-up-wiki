@@ -41,6 +41,7 @@ function Login({ onLogin }) {
               onChange={(e) => setEmail(e.target.value)}
               required
               disabled={loading}
+              autoComplete="email"
             />
           </div>
           <div className="form-group">
@@ -52,6 +53,7 @@ function Login({ onLogin }) {
               onChange={(e) => setPassword(e.target.value)}
               required
               disabled={loading}
+              autoComplete="current-password"
             />
           </div>
           <button type="submit" disabled={loading} className="btn">

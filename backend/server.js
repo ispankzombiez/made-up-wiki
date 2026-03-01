@@ -6,16 +6,16 @@ const db = require('./db');
 const app = express();
 
 // Middleware
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://ispankzombiez.github.io'
-];
-
 app.use(cors({
-  origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : allowedOrigins,
-  credentials: true
+  origin: ['http://localhost:3000', 'https://ispankzombiez.github.io'],
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'ngrok-skip-browser-warning']
 }));
 app.use(express.json());
+
+// Explicit preflight handling
+app.options('*', cors());
 
 // Root route
 app.get('/', (req, res) => {
