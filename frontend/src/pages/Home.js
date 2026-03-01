@@ -320,9 +320,11 @@ function Home({ user }) {
                               <button onClick={() => handleEdit(entry)} className="dropdown-item edit">
                                 Edit
                               </button>
-                              <button onClick={() => handleDelete(entry.id)} className="dropdown-item delete">
-                                Delete
-                              </button>
+                              {user.is_admin && (
+                                <button onClick={() => handleDelete(entry.id)} className="dropdown-item delete">
+                                  Delete
+                                </button>
+                              )}
                             </div>
                           )}
                         </div>

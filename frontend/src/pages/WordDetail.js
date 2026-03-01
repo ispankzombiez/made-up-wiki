@@ -274,9 +274,11 @@ function WordDetail({ user }) {
                       <button onClick={() => { handleEdit(entry); setDropdownOpen(false); }} className="dropdown-item edit">
                         Edit
                       </button>
-                      <button onClick={() => { handleDelete(entry.id); setDropdownOpen(false); }} className="dropdown-item delete">
-                        Delete
-                      </button>
+                      {user.is_admin && (
+                        <button onClick={() => { handleDelete(entry.id); setDropdownOpen(false); }} className="dropdown-item delete">
+                          Delete
+                        </button>
+                      )}
                     </div>
                   )}
                 </div>

@@ -108,10 +108,10 @@ router.put(
   }
 );
 
-// Delete entry (contributors only)
+// Delete entry (admins only)
 router.delete('/:id', authenticateToken, async (req, res) => {
-  if (!req.user.is_contributor) {
-    return res.status(403).json({ error: 'Only contributors can delete entries' });
+  if (!req.user.is_admin) {
+    return res.status(403).json({ error: 'Only admins can delete entries' });
   }
 
   try {
