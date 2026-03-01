@@ -286,7 +286,7 @@ function WordDetail({ user }) {
                 {entry.part_of_speech && <span className="part-of-speech">{entry.part_of_speech}</span>}
               </div>
               
-              {user && user.is_contributor && user.id === entry.created_by && (
+              {user && (user.is_admin || (user.is_contributor && user.id === entry.created_by)) && (
                 <div className="dropdown-container">
                   <button
                     className="pencil-icon"
@@ -301,9 +301,11 @@ function WordDetail({ user }) {
                   </button>
                   {dropdownOpen && (
                     <div className="dropdown-menu">
-                      <button onClick={() => { handleEdit(entry); setDropdownOpen(false); }} className="dropdown-item edit">
-                        Edit
-                      </button>
+                      {user.id === entry.created_by && (
+                        <button onClick={() => { handleEdit(entry); setDropdownOpen(false); }} className="dropdown-item edit">
+                          Edit
+                        </button>
+                      )}
                       {user.is_admin && (
                         <button onClick={() => { handleDelete(entry.id); setDropdownOpen(false); }} className="dropdown-item delete">
                           Delete
