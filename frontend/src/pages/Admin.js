@@ -1,43 +1,18 @@
-import React, { useState } from 'react';
-import { entriesAPI, inviteAPI } from '../api';
+import React, { useState, useEffect } from 'react';
+import { inviteAPI } from '../api';
 import './Admin.css';
 
 function Admin({ user }) {
-  const [activeTab, setActiveTab] = useState('entries');
-  const [word, setWord] = useState('');
-  const [partOfSpeech, setPartOfSpeech] = useState('');
-  const [pronunciation, setPronunciation] = useState('');
-  const [definition, setDefinition] = useState('');
-  const [example, setExample] = useState('');
-  const [relatedWords, setRelatedWords] = useState('');
+  const [activeTab, setActiveTab] = useState('invites');
   const [inviteCodes, setInviteCodes] = useState([]);
   const [users, setUsers] = useState([]);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const handleCreateEntry = async (e) => {
-    e.preventDefault();
-    setError('');
-    setMessage('');
-    setLoading(true);
-
-    try {
-      await entriesAPI.create(word, partOfSpeech, pronunciation, definition, example, relatedWords);
-      setMessage('Entry created successfully!');
-      setWord('');
-      setPartOfSpeech('');
-      setPronunciation('');
-      setDefinition('');
-      setExample('');
-      setRelatedWords('');
-      setTimeout(() => setMessage(''), 3000);
-    } catch (err) {
-      setError(err.response?.data?.error || 'Failed to create entry');
-    } finally {
-      setLoading(false);
-    }
-  };
+  useEffect(() => {
+    handleLoadInviteCodes();
+  }, []);
 
   const handleCreateInviteCode = async () => {
     setError('');
@@ -106,12 +81,6 @@ function Admin({ user }) {
         <h1>Admin Panel</h1>
 
         <div className="admin-tabs">
-          <button
-            className={`tab-button ${activeTab === 'entries' ? 'active' : ''}`}
-            onClick={() => setActiveTab('entries')}
-          >
-            Create Entry
-          </button>
           {user?.is_admin && (
             <>
               <button
@@ -132,92 +101,6 @@ function Admin({ user }) {
 
         {message && <div className="success">{message}</div>}
         {error && <div className="error">{error}</div>}
-
-        {activeTab === 'entries' && (
-          <div className="tab-content">
-            <h2>Create New Entry</h2>
-            <form onSubmit={handleCreateEntry} className="entry-form">
-              <div className="form-row">
-                <div className="form-group">
-                  <label htmlFor="word">Word</label>
-                  <input
-                    type="text"
-                    id="word"
-                    value={word}
-                    onChange={(e) => setWord(e.target.value)}
-                    placeholder="Enter the word"
-                    required
-                    disabled={loading}
-                  />
-                </div>
-                <div className="form-group">
-                  <label htmlFor="pos">Part of Speech</label>
-                  <input
-                    type="text"
-                    id="pos"
-                    value={partOfSpeech}
-                    onChange={(e) => setPartOfSpeech(e.target.value)}
-                    placeholder="noun, verb, adj, etc."
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="pronunciation">Pronunciation</label>
-                <input
-                  type="text"
-                  id="pronunciation"
-                  value={pronunciation}
-                  onChange={(e) => setPronunciation(e.target.value)}
-                  placeholder="e.g., /ɪɡˈzæmpəl/"
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="definition">Definition</label>
-                <textarea
-                  id="definition"
-                  value={definition}
-                  onChange={(e) => setDefinition(e.target.value)}
-                  placeholder="Enter the definition"
-                  rows="4"
-                  required
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="example">Example</label>
-                <textarea
-                  id="example"
-                  value={example}
-                  onChange={(e) => setExample(e.target.value)}
-                  placeholder="e.g., 'This is an example sentence.'"
-                  rows="2"
-                  disabled={loading}
-                />
-              </div>
-
-              <div className="form-group">
-                <label htmlFor="related">Related Words</label>
-                <input
-                  type="text"
-                  id="related"
-                  value={relatedWords}
-                  onChange={(e) => setRelatedWords(e.target.value)}
-                  placeholder="word1, word2, word3"
-                  disabled={loading}
-                />
-              </div>
-
-              <button type="submit" disabled={loading} className="btn">
-                {loading ? 'Creating...' : 'Create Entry'}
-              </button>
-            </form>
-          </div>
-        )}
 
         {activeTab === 'invites' && (
           <div className="tab-content">
@@ -262,6 +145,7 @@ function Admin({ user }) {
               <table className="users-table">
                 <thead>
                   <tr>
+                    <th>Username</th>
                     <th>Email</th>
                     <th>Contributor</th>
                     <th>Joined</th>
@@ -271,6 +155,7 @@ function Admin({ user }) {
                 <tbody>
                   {users.map(u => (
                     <tr key={u.id}>
+                      <td>{u.username}</td>
                       <td>{u.email}</td>
                       <td>{u.is_contributor ? '✓ Yes' : '✗ No'}</td>
                       <td>{new Date(u.created_at).toLocaleDateString()}</td>
