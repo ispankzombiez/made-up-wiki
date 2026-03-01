@@ -306,6 +306,9 @@
     padding: 1rem;
     background-color: #2a2a2a !important;
   }
+
+  .tab-content h2 {
+    font-size: 1.1rem;
   }
 
   .invites-table,
