@@ -188,7 +188,7 @@ function Home({ user }) {
     const letters = new Set();
     entries.forEach(entry => {
       const firstChar = entry.word.charAt(0).toLowerCase();
-      if (firstChar.match(/[a-z0-9]/)) {
+      if (firstChar.match(/[a-z]/)) {
         letters.add(firstChar);
       }
     });
@@ -199,7 +199,7 @@ function Home({ user }) {
     const grouped = {};
     entries.forEach(entry => {
       const firstChar = entry.word.charAt(0).toLowerCase();
-      if (firstChar.match(/[a-z0-9]/)) {
+      if (firstChar.match(/[a-z]/)) {
         if (!grouped[firstChar]) {
           grouped[firstChar] = [];
         }
@@ -249,7 +249,7 @@ function Home({ user }) {
         ) : (
           <>
             {(() => {
-              const allLetters = 'abcdefghijklmnopqrstuvwxyz0123456789'.split('');
+              const allLetters = 'abcdefghijklmnopqrstuvwxyz'.split('');
               const availableLetters = getAvailableLetters();
               const groupedEntries = groupEntriesByLetter();
               
