@@ -104,18 +104,22 @@ function Admin({ user }) {
           >
             Create Entry
           </button>
-          <button
-            className={`tab-button ${activeTab === 'invites' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('invites'); handleLoadInviteCodes(); }}
-          >
-            Manage Invites
-          </button>
-          <button
-            className={`tab-button ${activeTab === 'users' ? 'active' : ''}`}
-            onClick={() => { setActiveTab('users'); handleLoadUsers(); }}
-          >
-            Manage Users
-          </button>
+          {user?.is_admin && (
+            <>
+              <button
+                className={`tab-button ${activeTab === 'invites' ? 'active' : ''}`}
+                onClick={() => { setActiveTab('invites'); handleLoadInviteCodes(); }}
+              >
+                Manage Invites
+              </button>
+              <button
+                className={`tab-button ${activeTab === 'users' ? 'active' : ''}`}
+                onClick={() => { setActiveTab('users'); handleLoadUsers(); }}
+              >
+                Manage Users
+              </button>
+            </>
+          )}
         </div>
 
         {message && <div className="success">{message}</div>}

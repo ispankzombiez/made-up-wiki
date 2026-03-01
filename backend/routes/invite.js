@@ -1,13 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const authenticateToken = require('../middleware/auth');
+const { authenticateToken, authenticateAdmin } = require('../middleware/auth');
 const InviteCode = require('../models/InviteCode');
 const User = require('../models/User');
 
-// Create new invite code (admin/owner only - you would manually verify this is the owner)
-router.post('/create', authenticateToken, async (req, res) => {
-  // For now, this is open to any authenticated user creating invites for themselves
-  // You can enhance this by checking if the user is the owner/admin
+// Create new invite code (admin/owner only)
+router.post('/create', authenticateAdmin, async (req, res) => {
   try {
     const inviteCode = await InviteCode.create();
     res.status(201).json(inviteCode);
@@ -18,9 +16,8 @@ router.post('/create', authenticateToken, async (req, res) => {
 });
 
 // Get all invite codes (admin/owner only)
-router.get('/codes', authenticateToken, async (req, res) => {
+router.get('/codes', authenticateAdmin, async (req, res) => {
   try {
-    // TODO: Add owner verification here
     const codes = await InviteCode.getAllCodes();
     res.json(codes);
   } catch (err) {
@@ -29,8 +26,8 @@ router.get('/codes', authenticateToken, async (req, res) => {
   }
 });
 
-// Get all users (contributors only)
-router.get('/users', authenticateToken, async (req, res) => {
+// Get all users (admin/owner only)
+router.get('/users', authenticateAdmin, async (req, res) => {
   try {
     const users = await User.getAllUsers();
     res.json(users);
@@ -40,8 +37,8 @@ router.get('/users', authenticateToken, async (req, res) => {
   }
 });
 
-// Update user contributor status (contributors only)
-router.put('/users/:id/contributor', authenticateToken, async (req, res) => {
+// Update user contributor status (admin/owner only)
+router.put('/users/:id/contributor', authenticateAdmin, async (req, res) => {
   try {
     const { is_contributor } = req.body;
     const user = await User.setContributor(req.params.id, is_contributor);
