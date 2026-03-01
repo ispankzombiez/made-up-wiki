@@ -12,6 +12,11 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Root route
+app.get('/', (req, res) => {
+  res.json({ message: 'Made-Up Wiki API is running', version: '1.0.0' });
+});
+
 // Routes
 app.use('/api/auth', require('./routes/auth'));
 app.use('/api/entries', require('./routes/entries'));
