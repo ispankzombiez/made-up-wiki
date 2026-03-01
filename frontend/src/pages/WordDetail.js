@@ -10,6 +10,7 @@ function WordDetail({ user }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [editForm, setEditForm] = useState({
     word: '',
     partOfSpeech: '',
@@ -29,10 +30,13 @@ function WordDetail({ user }) {
     setLoading(true);
     setError('');
     try {
+      console.log('Fetching word:', wordName);
       const response = await entriesAPI.getByWord(wordName);
+      console.log('Response:', response.data);
       setEntry(response.data);
       setEditingId(null);
     } catch (err) {
+      console.error('Error fetching word:', err);
       setError('Word not found');
     } finally {
       setLoading(false);
@@ -253,13 +257,28 @@ function WordDetail({ user }) {
               </div>
               
               {user && user.is_contributor && user.id === entry.created_by && (
-                <div className="entry-actions">
-                  <button onClick={() => handleEdit(entry)} className="btn-edit">
-                    Edit
+                <div className="dropdown-container">
+                  <button
+                    className="pencil-icon"
+                    onClick={() => setDropdownOpen(!dropdownOpen)}
+                    title="Edit entry"
+                    aria-label="Edit entry"
+                  >
+                    <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                    </svg>
                   </button>
-                  <button onClick={() => handleDelete(entry.id)} className="btn-delete">
-                    Delete
-                  </button>
+                  {dropdownOpen && (
+                    <div className="dropdown-menu">
+                      <button onClick={() => { handleEdit(entry); setDropdownOpen(false); }} className="dropdown-item edit">
+                        Edit
+                      </button>
+                      <button onClick={() => { handleDelete(entry.id); setDropdownOpen(false); }} className="dropdown-item delete">
+                        Delete
+                      </button>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
