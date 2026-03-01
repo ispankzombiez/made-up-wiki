@@ -58,17 +58,19 @@ router.get('/stats', authenticateToken, isAdmin, async (req, res) => {
 
     // Recently created entries
     const recentEntriesResult = await db.query(`
-      SELECT id, word, created_by, created_at, created_by_username 
-      FROM entries 
-      ORDER BY created_at DESC 
+      SELECT e.id, e.word, e.created_by, e.created_at, u.username as created_by_username 
+      FROM entries e
+      LEFT JOIN users u ON e.created_by = u.id
+      ORDER BY e.created_at DESC 
       LIMIT 10
     `);
 
     // Top contributors
     const topContributorsResult = await db.query(`
-      SELECT created_by, created_by_username, COUNT(*) as count 
-      FROM entries 
-      GROUP BY created_by, created_by_username
+      SELECT e.created_by, u.username as created_by_username, COUNT(*) as count 
+      FROM entries e
+      LEFT JOIN users u ON e.created_by = u.id
+      GROUP BY e.created_by, u.username
       ORDER BY count DESC 
       LIMIT 5
     `);
