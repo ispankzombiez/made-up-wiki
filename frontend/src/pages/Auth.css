@@ -20,7 +20,7 @@
 .form-group label {
   display: block;
   margin-bottom: 0.5rem;
-  color: #ffffff !important;
+  color: var(--text-primary, #333) !important;
   font-weight: 500;
 }
 
