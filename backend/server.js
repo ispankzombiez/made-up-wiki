@@ -6,8 +6,13 @@ const db = require('./db');
 const app = express();
 
 // Middleware
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://ispankzombiez.github.io'
+];
+
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+  origin: process.env.FRONTEND_URL ? [process.env.FRONTEND_URL] : allowedOrigins,
   credentials: true
 }));
 app.use(express.json());
