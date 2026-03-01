@@ -18,7 +18,8 @@ function Home({ user }) {
     pronunciation: '',
     definition: '',
     example: '',
-    relatedWords: ''
+    relatedWords: '',
+    categories: ''
   });
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState('');
@@ -60,7 +61,8 @@ function Home({ user }) {
       pronunciation: entry.pronunciation || '',
       definition: entry.definition || '',
       example: entry.example || '',
-      relatedWords: entry.related_words || ''
+      relatedWords: entry.related_words || '',
+      categories: entry.categories || ''
     });
     setEditError('');
     setOpenDropdown(null);
@@ -74,7 +76,8 @@ function Home({ user }) {
       pronunciation: '',
       definition: '',
       example: '',
-      relatedWords: ''
+      relatedWords: '',
+      categories: ''
     });
     setEditError('');
   };
@@ -95,7 +98,8 @@ function Home({ user }) {
         editForm.pronunciation,
         editForm.definition,
         editForm.example,
-        editForm.relatedWords
+        editForm.relatedWords,
+        editForm.categories
       );
       setEntries(entries.map(e => e.id === entryId ? res.data : e));
       setEditingId(null);
@@ -105,7 +109,8 @@ function Home({ user }) {
         pronunciation: '',
         definition: '',
         example: '',
-        relatedWords: ''
+        relatedWords: '',
+        categories: ''
       });
     } catch (err) {
       console.error('Error updating entry:', err);
@@ -158,6 +163,21 @@ function Home({ user }) {
             </Link>
             {index < words.length - 1 && ', '}
           </React.Fragment>
+        ))}
+      </div>
+    );
+  };
+
+  const renderCategories = (categories) => {
+    if (!categories) return null;
+    const cats = categories.split(',').map(c => c.trim()).filter(c => c);
+    if (cats.length === 0) return null;
+    return (
+      <div className="categories">
+        {cats.map((cat, index) => (
+          <span key={index} className="category-tag">
+            {cat}
+          </span>
         ))}
       </div>
     );
@@ -275,6 +295,18 @@ function Home({ user }) {
                       />
                     </div>
 
+                    <div className="form-group">
+                      <label htmlFor="edit-categories">Categories</label>
+                      <input
+                        id="edit-categories"
+                        type="text"
+                        value={editForm.categories}
+                        onChange={(e) => setEditForm({ ...editForm, categories: e.target.value })}
+                        placeholder="nature, tech, food, etc."
+                        disabled={editLoading}
+                      />
+                    </div>
+
                     <div className="edit-actions">
                       <button
                         onClick={() => handleSaveEdit(entry.id)}
@@ -301,6 +333,7 @@ function Home({ user }) {
                         </Link>
                         {entry.part_of_speech && <span className="part-of-speech">{entry.part_of_speech}</span>}
                       </div>
+                      {renderCategories(entry.categories)}
                       
                       {user && user.is_contributor && user.id === entry.created_by && (
                         <div className="dropdown-container">

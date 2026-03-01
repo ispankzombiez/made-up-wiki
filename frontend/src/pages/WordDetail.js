@@ -17,7 +17,8 @@ function WordDetail({ user }) {
     pronunciation: '',
     definition: '',
     example: '',
-    relatedWords: ''
+    relatedWords: '',
+    categories: ''
   });
   const [editLoading, setEditLoading] = useState(false);
   const [editError, setEditError] = useState('');
@@ -51,7 +52,8 @@ function WordDetail({ user }) {
       pronunciation: entry.pronunciation || '',
       definition: entry.definition || '',
       example: entry.example || '',
-      relatedWords: entry.related_words || ''
+      relatedWords: entry.related_words || '',
+      categories: entry.categories || ''
     });
     setEditError('');
   };
@@ -77,7 +79,8 @@ function WordDetail({ user }) {
         editForm.pronunciation,
         editForm.definition,
         editForm.example,
-        editForm.relatedWords
+        editForm.relatedWords,
+        editForm.categories
       );
 
       fetchEntry();
@@ -117,6 +120,21 @@ function WordDetail({ user }) {
             </Link>
             {index < words.length - 1 && ', '}
           </React.Fragment>
+        ))}
+      </div>
+    );
+  };
+
+  const renderCategories = (categories) => {
+    if (!categories) return null;
+    
+    const tags = categories.split(',').map(cat => cat.trim()).filter(cat => cat);
+    if (tags.length === 0) return null;
+
+    return (
+      <div className="categories">
+        {tags.map((tag, index) => (
+          <span key={index} className="category-tag">{tag}</span>
         ))}
       </div>
     );
@@ -231,6 +249,18 @@ function WordDetail({ user }) {
               />
             </div>
 
+            <div className="form-group">
+              <label htmlFor="edit-categories">Categories/Tags</label>
+              <input
+                id="edit-categories"
+                type="text"
+                value={editForm.categories}
+                onChange={(e) => setEditForm({ ...editForm, categories: e.target.value })}
+                placeholder="nature, tech, food, etc."
+                disabled={editLoading}
+              />
+            </div>
+
             <div className="edit-actions">
               <button
                 onClick={() => handleSaveEdit(entry.id)}
@@ -298,6 +328,8 @@ function WordDetail({ user }) {
             )}
 
             {renderRelatedWords(entry.related_words)}
+
+            {renderCategories(entry.categories)}
 
             <div className="entry-footer">
               <small className="entry-meta">

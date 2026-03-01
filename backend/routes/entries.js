@@ -66,8 +66,8 @@ router.post(
     }
 
     try {
-      const { word, partOfSpeech, pronunciation, definition, example, relatedWords } = req.body;
-      const entry = await Entry.create(word, partOfSpeech || null, pronunciation || null, definition, example || null, relatedWords || null, req.user.id);
+      const { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories } = req.body;
+      const entry = await Entry.create(word, partOfSpeech || null, pronunciation || null, definition, example || null, relatedWords || null, categories || null, req.user.id);
       res.status(201).json(entry);
     } catch (err) {
       console.error(err);
@@ -95,8 +95,8 @@ router.put(
     }
 
     try {
-      const { word, partOfSpeech, pronunciation, definition, example, relatedWords } = req.body;
-      const entry = await Entry.update(req.params.id, word, partOfSpeech || null, pronunciation || null, definition, example || null, relatedWords || null);
+      const { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories } = req.body;
+      const entry = await Entry.update(req.params.id, word, partOfSpeech || null, pronunciation || null, definition, example || null, relatedWords || null, categories || null);
       if (!entry) {
         return res.status(404).json({ error: 'Entry not found' });
       }

@@ -9,7 +9,8 @@ function CreateEntryModal({ isOpen, onClose, onEntryCreated }) {
     pronunciation: '',
     definition: '',
     example: '',
-    relatedWords: ''
+    relatedWords: '',
+    categories: ''
   });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -39,7 +40,8 @@ function CreateEntryModal({ isOpen, onClose, onEntryCreated }) {
         formData.pronunciation,
         formData.definition,
         formData.example,
-        formData.relatedWords
+        formData.relatedWords,
+        formData.categories
       );
 
       setMessage('Entry created successfully!');
@@ -49,7 +51,8 @@ function CreateEntryModal({ isOpen, onClose, onEntryCreated }) {
         pronunciation: '',
         definition: '',
         example: '',
-        relatedWords: ''
+        relatedWords: '',
+        categories: ''
       });
 
       setTimeout(() => {
@@ -154,6 +157,19 @@ function CreateEntryModal({ isOpen, onClose, onEntryCreated }) {
               value={formData.relatedWords}
               onChange={handleChange}
               placeholder="word1, word2, word3"
+              disabled={loading}
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="categories">Categories/Tags</label>
+            <input
+              id="categories"
+              type="text"
+              name="categories"
+              value={formData.categories}
+              onChange={handleChange}
+              placeholder="nature, tech, food, etc."
               disabled={loading}
             />
           </div>

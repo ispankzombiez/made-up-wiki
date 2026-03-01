@@ -37,10 +37,10 @@ export const entriesAPI = {
     api.get(`/entries/${id}`),
   getByWord: (word) =>
     api.get(`/entries/word/${word}`),
-  create: (word, partOfSpeech, pronunciation, definition, example, relatedWords) =>
-    api.post('/entries', { word, partOfSpeech, pronunciation, definition, example, relatedWords }),
-  update: (id, word, partOfSpeech, pronunciation, definition, example, relatedWords) =>
-    api.put(`/entries/${id}`, { word, partOfSpeech, pronunciation, definition, example, relatedWords }),
+  create: (word, partOfSpeech, pronunciation, definition, example, relatedWords, categories) =>
+    api.post('/entries', { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories }),
+  update: (id, word, partOfSpeech, pronunciation, definition, example, relatedWords, categories) =>
+    api.put(`/entries/${id}`, { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories }),
   delete: (id) =>
     api.delete(`/entries/${id}`),
 };
