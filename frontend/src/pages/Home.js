@@ -183,6 +183,39 @@ function Home({ user }) {
     );
   };
 
+  const getAvailableLetters = () => {
+    if (entries.length === 0) return [];
+    const letters = new Set();
+    entries.forEach(entry => {
+      const firstChar = entry.word.charAt(0).toLowerCase();
+      if (firstChar.match(/[a-z0-9]/)) {
+        letters.add(firstChar);
+      }
+    });
+    return Array.from(letters).sort();
+  };
+
+  const groupEntriesByLetter = () => {
+    const grouped = {};
+    entries.forEach(entry => {
+      const firstChar = entry.word.charAt(0).toLowerCase();
+      if (firstChar.match(/[a-z0-9]/)) {
+        if (!grouped[firstChar]) {
+          grouped[firstChar] = [];
+        }
+        grouped[firstChar].push(entry);
+      }
+    });
+    return grouped;
+  };
+
+  const scrollToLetter = (letter) => {
+    const element = document.getElementById(`letter-${letter}`);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <div className="container">
       <div className="home">
@@ -214,8 +247,32 @@ function Home({ user }) {
         ) : entries.length === 0 ? (
           <p className="no-results">No entries found. {!user && 'Sign up to contribute!'}</p>
         ) : (
-          <div className="entries-list">
-            {entries.map(entry => (
+          <>
+            {(() => {
+              const allLetters = 'abcdefghijklmnopqrstuvwxyz0123456789'.split('');
+              const availableLetters = getAvailableLetters();
+              const groupedEntries = groupEntriesByLetter();
+              
+              return (
+                <>
+                  <div className="alphabet-index">
+                    {allLetters.map(letter => (
+                      <button
+                        key={letter}
+                        className={`letter-btn ${availableLetters.includes(letter) ? 'available' : 'disabled'}`}
+                        onClick={() => scrollToLetter(letter)}
+                        disabled={!availableLetters.includes(letter)}
+                      >
+                        {letter.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+
+                  <div className="entries-list">
+                    {availableLetters.map(letter => (
+                      <div key={letter} id={`letter-${letter}`} className="letter-section">
+                        <h3 className="letter-heading">{letter.toUpperCase()}</h3>
+                        {groupedEntries[letter].map(entry => (
               <div key={entry.id} className="entry-card">
                 {editingId === entry.id ? (
                   <div className="edit-form">
@@ -388,7 +445,13 @@ function Home({ user }) {
                 )}
               </div>
             ))}
-          </div>
+                      </div>
+                    ))}
+                  </div>
+                </>
+              );
+            })()}
+          </>
         )}
         
         <CreateEntryModal 
