@@ -248,6 +248,7 @@
   margin-bottom: 2rem;
   width: 100%;
   box-sizing: border-box;
+  flex: none !important;
 }
 
 .stat-card {
@@ -258,6 +259,9 @@
   text-align: center;
   transition: all 0.3s;
   min-width: 0;
+  width: 100%;
+  display: block !important;
+  flex: none !important;
 }
 
 @media (max-width: 1024px) {
