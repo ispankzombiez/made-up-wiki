@@ -77,6 +77,20 @@
   transform: scale(1.1);
 }
 
+.theme-toggle {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.2s;
+  color: var(--navbar-text);
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
 .dropdown-menu {
   position: absolute;
   top: 100%;
