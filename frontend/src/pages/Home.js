@@ -130,10 +130,6 @@ function Home({ user }) {
     }
   };
 
-  const handleRelatedWordClick = (word) => {
-    setSearchTerm(word);
-  };
-
   const handleEntryCreated = (newEntry) => {
     setEntries([newEntry, ...entries]);
     setSearchTerm('');
