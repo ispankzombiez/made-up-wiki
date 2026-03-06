@@ -91,6 +91,29 @@
   transform: scale(1.1);
 }
 
+.github-link-nav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--navbar-text);
+  cursor: pointer;
+  padding: 0.5rem;
+  transition: transform 0.2s, opacity 0.2s;
+  border-radius: 4px;
+}
+
+.github-link-nav:hover {
+  opacity: 0.8;
+  transform: scale(1.1);
+}
+
+.github-link-nav svg {
+  width: 20px;
+  height: 20px;
+}
+
 .dropdown-menu {
   position: absolute;
   top: 100%;

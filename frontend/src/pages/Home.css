@@ -4,46 +4,6 @@
   color: var(--text-primary);
 }
 
-.home-header {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-
-.github-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  background: none;
-  border: none;
-  color: var(--text-secondary, #666);
-  cursor: pointer;
-  transition: color 0.2s ease;
-  border-radius: 4px;
-}
-
-.github-link:hover {
-  color: var(--text-primary, #333);
-}
-
-.github-link svg {
-  width: 24px;
-  height: 24px;
-}
-
-:root[data-theme='dark'] .github-link {
-  color: var(--text-secondary, #999);
-}
-
-:root[data-theme='dark'] .github-link:hover {
-  color: #fff;
-}
-
 .subtitle {
   text-align: center;
   color: var(--text-secondary);
