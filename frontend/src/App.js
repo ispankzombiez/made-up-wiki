@@ -11,6 +11,7 @@ import Signup from './pages/Signup';
 import Admin from './pages/Admin';
 import Profile from './pages/Profile';
 import Submissions from './pages/Submissions';
+import ViewLeaderboard from './pages/ViewLeaderboard';
 import './App.css';
 
 function App() {
@@ -85,6 +86,7 @@ function App() {
           <Route path="/login" element={user ? <Navigate to="/" /> : <Login onLogin={handleLogin} />} />
           <Route path="/signup" element={user ? <Navigate to="/" /> : <Signup onSignup={handleLogin} />} />
           <Route path="/admin" element={user && user.is_admin ? <Admin user={user} /> : <Navigate to="/" />} />
+          <Route path="/leaderboard" element={<ViewLeaderboard />} />
           <Route path="/profile" element={user ? <Profile user={user} onLogout={handleLogout} /> : <Navigate to="/login" />} />
           <Route path="/submissions" element={user ? <Submissions user={user} /> : <Navigate to="/login" />} />
         </Routes>

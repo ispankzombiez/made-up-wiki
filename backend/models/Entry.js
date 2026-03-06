@@ -182,6 +182,46 @@ class Entry {
     );
     return result.rows[0];
   }
+
+  static async recordView(id) {
+    const result = await db.query(
+      'UPDATE entries SET views = views + 1 WHERE id = $1 RETURNING id, word, views',
+      [id]
+    );
+    return result.rows[0];
+  }
+
+  static async getTopViewed(limit = 10) {
+    const result = await db.query(
+      `SELECT 
+        e.id,
+        e.word,
+        e.views,
+        e.definition,
+        e.created_at
+      FROM entries e
+      WHERE e.status = 'approved'
+      ORDER BY e.views DESC
+      LIMIT $1`,
+      [limit]
+    );
+    return result.rows;
+  }
+
+  static async getAllViewedRanking() {
+    const result = await db.query(
+      `SELECT 
+        e.id,
+        e.word,
+        e.views,
+        e.definition,
+        e.created_at
+      FROM entries e
+      WHERE e.status = 'approved'
+      ORDER BY e.views DESC`
+    );
+    return result.rows;
+  }
 }
 
 module.exports = Entry;

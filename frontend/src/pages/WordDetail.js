@@ -38,6 +38,16 @@ function WordDetail({ user }) {
       console.log('Response:', response.data);
       setEntry(response.data);
       setEditingId(null);
+      
+      // Record view
+      if (response.data?.id) {
+        try {
+          await entriesAPI.recordView(response.data.id);
+        } catch (err) {
+          console.error('Error recording view:', err);
+          // Don't fail if view recording fails
+        }
+      }
     } catch (err) {
       console.error('Error fetching word:', err);
       setError('Word not found');

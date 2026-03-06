@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { inviteAPI, adminAPI } from '../api';
+import { Link } from 'react-router-dom';
+import { inviteAPI, adminAPI, entriesAPI } from '../api';
 import './Admin.css';
 
 function Admin({ user }) {
@@ -11,6 +12,7 @@ function Admin({ user }) {
   const [loading, setLoading] = useState(false);
   const [stats, setStats] = useState(null);
   const [submissions, setSubmissions] = useState([]);
+  const [topViewed, setTopViewed] = useState([]);
 
   useEffect(() => {
     if (activeTab === 'dashboard') {
@@ -29,6 +31,10 @@ function Admin({ user }) {
     try {
       const response = await adminAPI.getStats();
       setStats(response.data);
+      
+      // Load top viewed entries
+      const viewedResponse = await entriesAPI.getTopViewed(10);
+      setTopViewed(viewedResponse);
     } catch (err) {
       console.error('Error fetching stats:', err);
       setError(err.response?.data?.error || 'Failed to load statistics');
@@ -286,6 +292,29 @@ function Admin({ user }) {
                       ))}
                     </tbody>
                   </table>
+                </div>
+
+                <div className="dashboard-section">
+                  <div className="section-header">
+                    <h3>Most Viewed Words</h3>
+                    <Link to="/leaderboard" className="view-all-btn">View Full Leaderboard →</Link>
+                  </div>
+                  {topViewed && topViewed.length > 0 ? (
+                    <div className="most-viewed-list">
+                      {topViewed.map((entry, index) => (
+                        <div key={entry.id} className="viewed-item">
+                          <div className="viewed-rank">#{index + 1}</div>
+                          <div className="viewed-details">
+                            <div className="viewed-word">{entry.word}</div>
+                            <div className="viewed-preview">{entry.definition?.substring(0, 60)}...</div>
+                          </div>
+                          <div className="viewed-count">{entry.views} views</div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <p>No view data yet</p>
+                  )}
                 </div>
               </>
             ) : (

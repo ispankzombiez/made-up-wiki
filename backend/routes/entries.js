@@ -235,4 +235,41 @@ router.post('/:id/revert/:historyId', authenticateToken, async (req, res) => {
   }
 });
 
+// Record view for an entry
+router.post('/:id/view', async (req, res) => {
+  try {
+    const result = await Entry.recordView(req.params.id);
+    if (!result) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+    res.json(result);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error recording view' });
+  }
+});
+
+// Get top viewed entries
+router.get('/stats/top-viewed', async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    const entries = await Entry.getTopViewed(limit);
+    res.json(entries);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching top viewed entries' });
+  }
+});
+
+// Get all entries ranked by views
+router.get('/stats/all-viewed', async (req, res) => {
+  try {
+    const entries = await Entry.getAllViewedRanking();
+    res.json(entries);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching view rankings' });
+  }
+});
+
 module.exports = router;

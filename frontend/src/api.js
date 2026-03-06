@@ -49,6 +49,12 @@ export const entriesAPI = {
     api.get(`/entries/${id}/history`),
   revertToHistory: (id, historyId) =>
     api.post(`/entries/${id}/revert/${historyId}`),
+  recordView: (id) =>
+    api.post(`/entries/${id}/view`),
+  getTopViewed: (limit = 10) =>
+    api.get('/entries/stats/top-viewed', { params: { limit } }),
+  getAllViewed: () =>
+    api.get('/entries/stats/all-viewed'),
 };
 
 export const inviteAPI = {
