@@ -90,11 +90,33 @@ class Entry {
     return result.rows[0];
   }
 
-  static async update(id, word, partOfSpeech, pronunciation, definition, example, relatedWords, categories) {
+  static async update(id, word, partOfSpeech, pronunciation, definition, example, relatedWords, categories, changedBy = null, changeDescription = null) {
     const result = await db.query(
       `UPDATE entries SET word = $1, part_of_speech = $2, pronunciation = $3, definition = $4, example = $5, related_words = $6, categories = $7, updated_at = NOW() WHERE id = $8 
       RETURNING id, word, part_of_speech, pronunciation, definition, example, related_words, categories, created_by, created_at, updated_at`,
       [word, partOfSpeech, pronunciation, definition, example, relatedWords, categories, id]
+    );
+    return result.rows[0];
+  }
+
+  static async revertToHistory(entryId, historyId) {
+    // Get the history record to restore from
+    const historyResult = await db.query(
+      'SELECT word, part_of_speech, pronunciation, definition, example, related_words, categories FROM entry_history WHERE id = $1 AND entry_id = $2',
+      [historyId, entryId]
+    );
+
+    if (historyResult.rows.length === 0) {
+      throw new Error('History record not found');
+    }
+
+    const history = historyResult.rows[0];
+
+    // Update the entry with values from history
+    const result = await db.query(
+      `UPDATE entries SET word = $1, part_of_speech = $2, pronunciation = $3, definition = $4, example = $5, related_words = $6, categories = $7, updated_at = NOW() WHERE id = $8 
+      RETURNING id, word, part_of_speech, pronunciation, definition, example, related_words, categories, created_by, created_at, updated_at`,
+      [history.word, history.part_of_speech, history.pronunciation, history.definition, history.example, history.related_words, history.categories, entryId]
     );
     return result.rows[0];
   }
@@ -161,3 +183,5 @@ class Entry {
     return result.rows[0];
   }
 }
+
+module.exports = Entry;

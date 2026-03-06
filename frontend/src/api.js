@@ -39,12 +39,16 @@ export const entriesAPI = {
     api.get(`/entries/word/${word}`),
   create: (word, partOfSpeech, pronunciation, definition, example, relatedWords, categories) =>
     api.post('/entries', { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories }),
-  update: (id, word, partOfSpeech, pronunciation, definition, example, relatedWords, categories) =>
-    api.put(`/entries/${id}`, { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories }),
+  update: (id, word, partOfSpeech, pronunciation, definition, example, relatedWords, categories, changeDescription) =>
+    api.put(`/entries/${id}`, { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories, changeDescription }),
   delete: (id) =>
     api.delete(`/entries/${id}`),
   getPendingSubmissions: () =>
     api.get('/entries/pending/mine'),
+  getHistory: (id) =>
+    api.get(`/entries/${id}/history`),
+  revertToHistory: (id, historyId) =>
+    api.post(`/entries/${id}/revert/${historyId}`),
 };
 
 export const inviteAPI = {

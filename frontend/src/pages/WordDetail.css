@@ -133,6 +133,10 @@
   color: #f44336;
 }
 
+.dropdown-item.history {
+  color: #ff9800;
+}
+
 .pronunciation {
   color: var(--text-secondary, #666);
   font-size: 1.1rem;

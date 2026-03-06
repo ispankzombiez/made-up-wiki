@@ -2,6 +2,8 @@ const express = require('express');
 const router = express.Router();
 const { body, validationResult } = require('express-validator');
 const Entry = require('../models/Entry');
+const EntryHistory = require('../models/EntryHistory');
+const db = require('../db');
 const { authenticateToken } = require('../middleware/auth');
 
 // Get all entries with optional search
@@ -107,7 +109,7 @@ router.put(
 
     try {
       // Check if entry exists and belongs to user or user is admin
-      const existingEntry = await db.query('SELECT created_by, status FROM entries WHERE id = $1', [req.params.id]);
+      const existingEntry = await db.query('SELECT created_by, status, word, part_of_speech, pronunciation, definition, example, related_words, categories FROM entries WHERE id = $1', [req.params.id]);
       if (existingEntry.rows.length === 0) {
         return res.status(404).json({ error: 'Entry not found' });
       }
@@ -123,7 +125,23 @@ router.put(
         return res.status(403).json({ error: 'Cannot edit approved entries' });
       }
 
-      const { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories } = req.body;
+      const { word, partOfSpeech, pronunciation, definition, example, relatedWords, categories, changeDescription } = req.body;
+      
+      // Create history record with current state before updating
+      await EntryHistory.create(
+        req.params.id,
+        entry.word,
+        entry.part_of_speech,
+        entry.pronunciation,
+        entry.definition,
+        entry.example,
+        entry.related_words,
+        entry.categories,
+        req.user.id,
+        changeDescription || 'Entry updated'
+      );
+      
+      // Update the entry
       const updatedEntry = await Entry.update(req.params.id, word, partOfSpeech || null, pronunciation || null, definition, example || null, relatedWords || null, categories || null);
       if (!updatedEntry) {
         return res.status(404).json({ error: 'Entry not found' });
@@ -151,6 +169,69 @@ router.delete('/:id', authenticateToken, async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: 'Error deleting entry' });
+  }
+});
+
+// Get entry history
+router.get('/:id/history', async (req, res) => {
+  try {
+    const history = await EntryHistory.getHistoryByEntryId(req.params.id);
+    res.json(history);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error fetching entry history' });
+  }
+});
+
+// Revert entry to previous version (admins only)
+router.post('/:id/revert/:historyId', authenticateToken, async (req, res) => {
+  if (!req.user.is_admin) {
+    return res.status(403).json({ error: 'Only admins can revert entries' });
+  }
+
+  try {
+    // Verify entry exists
+    const entry = await Entry.findById(req.params.id);
+    if (!entry) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+
+    // Verify history record exists for this entry
+    const historyRecord = await EntryHistory.getHistoryRecord(req.params.historyId);
+    if (!historyRecord || historyRecord.entry_id !== parseInt(req.params.id)) {
+      return res.status(404).json({ error: 'History record not found' });
+    }
+
+    // Get current state before reverting
+    const currentEntry = await db.query(
+      'SELECT word, part_of_speech, pronunciation, definition, example, related_words, categories FROM entries WHERE id = $1',
+      [req.params.id]
+    );
+    
+    if (currentEntry.rows.length === 0) {
+      return res.status(404).json({ error: 'Entry not found' });
+    }
+
+    // Create a history record for the revert action
+    await EntryHistory.create(
+      req.params.id,
+      currentEntry.rows[0].word,
+      currentEntry.rows[0].part_of_speech,
+      currentEntry.rows[0].pronunciation,
+      currentEntry.rows[0].definition,
+      currentEntry.rows[0].example,
+      currentEntry.rows[0].related_words,
+      currentEntry.rows[0].categories,
+      req.user.id,
+      `Reverted to version from ${historyRecord.created_at}`
+    );
+
+    // Revert the entry
+    const revertedEntry = await Entry.revertToHistory(req.params.id, req.params.historyId);
+    res.json(revertedEntry);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Error reverting entry' });
   }
 });
 

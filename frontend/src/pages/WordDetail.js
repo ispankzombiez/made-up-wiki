@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { entriesAPI } from '../api';
+import HistoryModal from '../components/HistoryModal';
 import './WordDetail.css';
 
 function WordDetail({ user }) {
@@ -11,6 +12,7 @@ function WordDetail({ user }) {
   const [error, setError] = useState('');
   const [editingId, setEditingId] = useState(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [showHistory, setShowHistory] = useState(false);
   const [editForm, setEditForm] = useState({
     word: '',
     partOfSpeech: '',
@@ -102,6 +104,11 @@ function WordDetail({ user }) {
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to delete entry');
     }
+  };
+
+  const handleRevertSuccess = () => {
+    // Reload the entry after successful revert
+    fetchEntry();
   };
 
   const renderRelatedWords = (relatedWords) => {
@@ -307,9 +314,14 @@ function WordDetail({ user }) {
                         </button>
                       )}
                       {user.is_admin && (
-                        <button onClick={() => { handleDelete(entry.id); setDropdownOpen(false); }} className="dropdown-item delete">
-                          Delete
-                        </button>
+                        <>
+                          <button onClick={() => { setShowHistory(true); setDropdownOpen(false); }} className="dropdown-item history">
+                            View History
+                          </button>
+                          <button onClick={() => { handleDelete(entry.id); setDropdownOpen(false); }} className="dropdown-item delete">
+                            Delete
+                          </button>
+                        </>
                       )}
                     </div>
                   )}
@@ -341,6 +353,14 @@ function WordDetail({ user }) {
             </div>
           </div>
         )}
+        
+        <HistoryModal 
+          entryId={entry?.id}
+          isOpen={showHistory}
+          onClose={() => setShowHistory(false)}
+          user={user}
+          onRevertSuccess={handleRevertSuccess}
+        />
       </div>
     </div>
   );
