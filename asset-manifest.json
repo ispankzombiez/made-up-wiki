@@ -1,13 +1,13 @@
 {
   "files": {
-    "main.css": "/made-up-wiki/static/css/main.d8cc3cc4.css",
+    "main.css": "/made-up-wiki/static/css/main.7a8f9cd8.css",
     "main.js": "/made-up-wiki/static/js/main.98465d7c.js",
     "index.html": "/made-up-wiki/index.html",
-    "main.d8cc3cc4.css.map": "/made-up-wiki/static/css/main.d8cc3cc4.css.map",
+    "main.7a8f9cd8.css.map": "/made-up-wiki/static/css/main.7a8f9cd8.css.map",
     "main.98465d7c.js.map": "/made-up-wiki/static/js/main.98465d7c.js.map"
   },
   "entrypoints": [
-    "static/css/main.d8cc3cc4.css",
+    "static/css/main.7a8f9cd8.css",
     "static/js/main.98465d7c.js"
   ]
 }
